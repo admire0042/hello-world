@@ -61,31 +61,55 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+#printint ID from command inside jobs
+commands:
+  print_pipeline_id:
+    steps:
+      - run: echo ${CIRCLE_WORKFLOW_ID}
+
+        
+
+#commands:
+#  print_pipeline_id:
+#    description: "A simple command that prints Circle CI PipelineId"
+#    parameters:
+#      to:
+#        type: string
+#        default: "No Id"
+#    steps:
+#      - run: echo << parameters.to >>
+
 # Use a package of configuration called an orb.
 
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  save_hello_world_output:
-     docker:
+  #save_hello_world_output:
+  #   docker:
+  #    - image: circleci/node:13.8.0
+
+  #   steps:
+  #    - run: echo "hello world" > ~/output.txt
+  #    - persist_to_workspace:
+  #        root: /~
+  #        paths:
+  #          - output.txt
+
+  #print_output_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+
+  #   steps:
+  #     - attach_workspace:
+  #        at: /~
+  #     - run: cat ~/output.txt
+  my_job_get_from_command:
+    docker:
       - image: circleci/node:13.8.0
+    steps:
+      - print_pipeline_id
 
-     steps:
-      - run: echo "hello world" > ~/output.txt
-      - persist_to_workspace:
-          root: /~
-          paths:
-            - output.txt
-
-  print_output_file:
-     docker:
-       - image: circleci/node:13.8.0
-
-     steps:
-       - attach_workspace:
-          at: /~
-       - run: cat ~/output.txt
 
   print_hello:
     docker:
@@ -117,10 +141,11 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - save_hello_world_output
-      - print_output_file:
-          requires:
-            - save_hello_world_output
+      #- save_hello_world_output
+      #- print_output_file:
+      #    requires:
+      #      - save_hello_world_output
+      - my_job_get_from_command
       - print_hello
       - print_world:
           requires:
