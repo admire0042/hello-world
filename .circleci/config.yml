@@ -67,17 +67,14 @@ commands:
     steps:
       - run: echo ${CIRCLE_WORKFLOW_ID}
 
-        
-
-#commands:
-#  print_pipeline_id:
-#    description: "A simple command that prints Circle CI PipelineId"
-#    parameters:
-#      to:
-#        type: string
-#        default: "No Id"
-#    steps:
-#      - run: echo << parameters.to >>
+  print_pipeline_id2:
+    description: "A simple command that prints Circle CI PipelineId"
+    parameters:
+      id:
+        type: string
+        default: "No Id"
+    steps:
+      - run: echo << parameters.id >>
 
 # Use a package of configuration called an orb.
 
@@ -109,6 +106,14 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - print_pipeline_id
+
+  my_job_get_from_command2:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - print_pipeline_id2:
+          id: <<
+
 
 
   print_hello:
@@ -146,6 +151,7 @@ workflows:
       #    requires:
       #      - save_hello_world_output
       - my_job_get_from_command
+       - my_job_get_from_command2
       - print_hello
       - print_world:
           requires:
